@@ -33,6 +33,7 @@ export namespace ContentType {
     export const ContentTypeOpinion = makeContentType(14);
     export const ContentTypeStore = makeContentType(15);
     export const ContentTypeAuthority = makeContentType(16);
+    export const ContentTypeZackArchive = makeContentType(17);
 }
 
 export namespace CensorshipType {

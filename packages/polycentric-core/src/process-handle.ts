@@ -729,6 +729,27 @@ export async function createProcessHandleFromKey(
     return ProcessHandle.load(store);
 }
 
+export async function createProcessHandleFromSecret(
+    metaStore: MetaStore.IMetaStore,
+    processSecret: Models.ProcessSecret.ProcessSecret,
+): Promise<ProcessHandle> {
+    const publicKey = await Models.PrivateKey.derivePublicKey(processSecret.system);
+    // const process = processSecret.process;
+    console.log(await metaStore.setActiveStore(publicKey, 0))
+
+    const level = await metaStore.openStore(publicKey, 0);
+
+    // const processSecret = Models.ProcessSecret.fromProto({
+    //     system: privateKey,
+    //     process: process,
+    // });
+
+    const store = new Store.Store(level);
+    await store.setProcessSecret(processSecret);
+    await metaStore.setActiveStore(publicKey, 0);
+    return ProcessHandle.load(store);
+}
+
 function updateSystemState(
     state: Protocol.StorageTypeSystemState,
     event: Models.Event.Event,

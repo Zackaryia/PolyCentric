@@ -10,7 +10,7 @@ mod migrate;
 mod model;
 mod postgres;
 mod queries;
-mod version;
+// mod version;
 
 include!(concat!(env!("OUT_DIR"), "/protos/mod.rs"));
 

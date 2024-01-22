@@ -332,3 +332,51 @@ message FindClaimAndVouchResponse {
     SignedEvent vouch = 1;
     SignedEvent claim = 2;
 }
+
+
+
+
+
+message ZackArchive {
+    uint64 retrieval_epoch_millis = 1;
+
+    bytes  plugin_signature = 2;
+    // bytes  plugin_public_key = 3 TODO
+    uint64 plugin_version = 3;
+    string plugin_author = 4;
+    // string plugin_author_url = 5; TODO
+
+    uint64 zack_archive_version = 5; 
+    
+    string platform = 6; // YouTube
+    string content_type = 7; // Video for YouTube, MicroBlog for Twitter, etc
+    string author_id = 8; // UCIBNAd4nO5rk6G8YaEudqNw
+    string content_id = 9; // B3UvaVFGZbg
+    
+    string data_type = 10; // Audio (for the video stream, or for audio stream if unmuxed)
+    uint64 data_source_type = 11; // 1 == DataSourceYTVideo, 2 == DataSourceYTAudio
+    bytes  data_source = 12;      // The datasource determined above
+
+    // Verified by Trusted Authority
+    uint64 file_length = 13;
+    // Technically useless other than torrent
+    string file_name = 14;
+    // Verified by Server
+    bytes  btv2_infohash = 15; // digest # Verify that this was reproducable from file name, and torrent peices, and fileLength
+    // Verified by Server
+    bytes  sha256_merkle_hash = 16; // digest # Verify this was reproducable from torrent pieces
+    // Verified by Trusted Authority
+    bytes  sha256_hash = 17; // Not sure if I want this or want to remove it bc its redundant
+    // Verified by Trusted Authority
+    bytes  blake3_hash = 18; // Not sure if I want this or want to remove it bc its redundant
+    // My thought process behind the extra hash functions is their general utility and that they provide extra forms of identification at little cost (32 bytes each)
+    // There could be issues with the overhead to support the functions and the overhead to verify that those hashes are also correct but I think its worth it.
+    
+    // Torrent Piece Length is infered
+    // TorrentPieceLength = a power of 2 calced with  return 2 ** max(20, log2(x/512)) 
+    // This ensures that files will allways be under 512 peices long and small files will have peices atleast 1 mb in size.
+    // 512 peices was chosen to reduce the strein on Poly Centric storing lots of arbitrary data.
+    
+    // Verified by Trusted Authority
+    bytes  torrent_piece_layers = 19; // 32 bytes per piece hash.
+}
